@@ -4,7 +4,7 @@ It's an e-commerce site developed by a Java learner.
 
 ## Website URL
 
-[http://13.54.172.208/](http://13.54.172.208)
+[INDEX](http://18.182.90.188/index.html)
 
 ## Author
 
