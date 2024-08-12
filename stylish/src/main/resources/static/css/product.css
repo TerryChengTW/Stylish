@@ -1,0 +1,271 @@
+#product-detail {
+    max-width: 960px;
+    margin: 140px auto 0;
+    padding: 60px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-content {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 30px;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.product-image {
+    flex: 1;
+}
+
+.product-image img {
+    width: 560px;
+    height: 746.67px;
+}
+
+.product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+#product-title {
+    line-height: 38px;
+    font-size: 32px;
+    letter-spacing: 6.4px;
+    color: #3f3a3a;
+    margin-top: 0;
+}
+
+#product-id {
+    line-height: 24px;
+    margin-top: 16px;
+    font-size: 20px;
+    letter-spacing: 4px;
+    color: #bababa;
+}
+
+#product-price {
+    line-height: 36px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    font-size: 30px;
+    color: #3f3a3a;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #3f3a3a;
+}
+
+.product-colors, .product-sizes, .product-quantity {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+
+.product-colors p, .product-sizes p, .product-quantity p {
+    margin-right: 10px;
+}
+
+#color-options, #size-options {
+    display: flex;
+    gap: 10px;
+}
+
+.color-option {
+    width: 30px;
+    height: 30px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.color-option div {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.color-option.selected::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    bottom: -5px;
+    left: -5px;
+    border: 2px solid #000;
+}
+
+.size-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    background-color: #f0f0f0;
+    color: #000;
+    cursor: pointer;
+}
+
+.size-option.selected {
+    background-color: #000;
+    color: #fff;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-selector button {
+    width: 35px;
+    height: 35px;
+    background-color: #fff;
+    border:1px solid #979797;
+    cursor: pointer;
+}
+
+#quantity {
+    width: 100px;
+    height: 34px;
+    text-align: center;
+    border: 1px solid #ccc;
+    font-size: 20px;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
+
+#add-to-cart {
+    width: 100%;
+    height: 60px;
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    letter-spacing: 5px;
+    margin-top: 20px;
+}
+
+.product-information {
+    margin-top: auto;
+}
+
+.product-information p {
+    font-size: 20px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 0;
+}
+
+
+
+.product-description {
+    width: 960px;
+    margin-bottom: 30px;
+    padding-left: 0;
+    margin-left: 0;
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+}
+
+.product-description h2 {
+    font-size: 20px;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+    display: flex;
+    margin-left: 0;
+}
+
+.product-description h2::after {
+    content: '';
+    flex-grow: 1;
+    height: 1px;
+    margin-top: 10px;
+    background: #000;
+    margin-left: 50px;
+}
+
+.product-description p {
+    font-size: 20px;
+    margin-top: 20px;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+.product-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+}
+
+.product-images img {
+    width: 960px;
+    height: 540px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+  
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+  
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+  
+.close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+  
+.tappay-field {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 10px;
+}
+  
+#submit-order {
+    width: 100%;
+    height: 40px;
+    background-color: #cccccc;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+  
+#result {
+    margin-top: 20px;
+}

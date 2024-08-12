@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>感謝您的訂購 - STYLiSH</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/thankyou.css">
+    <style>
+
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="thank-you-container">
+        <h1 class="thank-you-title">感謝您的訂購！</h1>
+        <p class="thank-you-message">您的訂單已成功提交。我們將儘快處理您的訂單。</p>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+        fetch('header-footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data.split('<!-- Footer -->')[0];
+                document.getElementById('footer-placeholder').innerHTML = data.split('<!-- Footer -->')[1];
+            });
+    </script>
+</body>
+</html>

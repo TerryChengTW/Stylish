@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STYLiSH</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <main>
+        <section id="campaign" class="campaign">
+            <div class="campaign-content">
+                <div id="campaign-story"></div>
+            </div>
+        </section>
+        <section id="product-list" class="product-list">
+            <div class="product-container">
+                <div class="product-grid">
+                    <!-- Product items will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="footer-placeholder"></div>
+
+    <script src="js/common.js"></script>
+    <script src="js/index.js"></script>
+    <script>
+        fetch('header-footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data.split('<!-- Footer -->')[0];
+                document.getElementById('footer-placeholder').innerHTML = data.split('<!-- Footer -->')[1];
+            });
+    </script>
+</body>
+</html>

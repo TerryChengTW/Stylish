@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook 登入</title>
+</head>
+<body>
+<h1>Facebook 登入</h1>
+<button id="fbLoginBtn">使用 Facebook 登入</button>
+<button id="confirmFbLogin" style="display: none;">確認登入</button>
+
+<script>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '929525328895382',
+            cookie     : true,
+            xfbml      : true,
+            version    : 'v20.0'
+        });
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    document.getElementById('fbLoginBtn').addEventListener('click', function() {
+        FB.login(function(response) {
+            if (response.authResponse) {
+                console.log('Facebook login successful');
+                var accessToken = response.authResponse.accessToken;
+                sessionStorage.setItem('fbAccessToken', accessToken);
+                document.getElementById('confirmFbLogin').style.display = 'block';
+            } else {
+                console.log('Facebook login failed');
+            }
+        }, {scope: 'public_profile,email'});
+    });
+
+    document.getElementById('confirmFbLogin').addEventListener('click', function() {
+        var fbAccessToken = sessionStorage.getItem('fbAccessToken');
+        if (fbAccessToken) {
+            fetch('/api/1.0/user/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    provider: 'facebook',
+                    access_token: fbAccessToken
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Login successful:', data);
+                })
+                .catch(error => {
+                    console.error('Login error:', error);
+                });
+        } else {
+            console.error('No Facebook access token found');
+        }
+    });
+</script>
+</body>
+</html>

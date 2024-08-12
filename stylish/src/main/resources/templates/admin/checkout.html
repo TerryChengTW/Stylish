@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stylish 結帳頁面</title>
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.18.0"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .tappay-field {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+        #submit-button {
+            width: 100%;
+            height: 40px;
+            background-color: #cccccc;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Stylish TapPay</h1>
+    <div id="card-number" class="tappay-field"></div>
+    <div id="card-expiration-date" class="tappay-field"></div>
+    <div id="card-ccv" class="tappay-field"></div>
+    <button id="submit-button">結帳</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    TPDirect.setupSDK(12348, 'app_pa1pQcKoY22IlnSXq5m5WP5jFKzoRG58VEXpT7wU62ud7mMbDOGzCYIlzzLF', 'sandbox');
+
+    TPDirect.card.setup({
+        fields: {
+            number: {
+                element: '#card-number',
+                placeholder: '**** **** **** ****'
+            },
+            expirationDate: {
+                element: '#card-expiration-date',
+                placeholder: 'MM / YY'
+            },
+            ccv: {
+                element: '#card-ccv',
+                placeholder: 'ccv'
+            }
+        },
+        styles: {
+            'input': {
+                'color': 'gray'
+            },
+            ':focus': {
+                'color': 'black'
+            },
+            '.valid': {
+                'color': 'green'
+            },
+            '.invalid': {
+                'color': 'red'
+            }
+        }
+    });
+
+    TPDirect.card.onUpdate(function (update) {
+        console.log('TPDirect.card.onUpdate', update);
+        if (update.status.number === 2) console.log('卡號有誤');
+        if (update.status.number === 0) console.log('卡號正確');
+        if (update.status.expiry === 2) console.log('到期日有誤');
+        if (update.status.expiry === 0) console.log('到期日正確');
+        if (update.status.ccv === 2) console.log('CCV 有誤');
+        if (update.status.ccv === 0) console.log('CCV 正確');
+    });
+
+    document.getElementById('submit-button').addEventListener('click', function(event) {
+        event.preventDefault();
+        const tappayStatus = TPDirect.card.getTappayFieldsStatus();
+        console.log('TapPay Fields 狀態:', tappayStatus);
+
+        if (!tappayStatus.canGetPrime) {
+            alert('無法取得 prime. 請確認信用卡資訊是否正確填寫。');
+            return;
+        }
+
+        TPDirect.card.getPrime((result) => {
+            if (result.status !== 0) {
+                alert('取得 prime 錯誤: ' + result.msg);
+                return;
+            }
+            alert('成功取得 prime: ' + result.card.prime);
+            document.getElementById('result').textContent = '成功取得 prime: ' + result.card.prime;
+        });
+    });
+</script>
+</body>
+</html>

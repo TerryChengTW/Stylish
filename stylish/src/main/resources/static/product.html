@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STYLiSH</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/product.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <main id="product-detail">
+        <div id="checkout-modal" class="modal">
+            <div class="modal-content container">
+                <span class="close">&times;</span>
+                <h1>Stylish TapPay</h1>
+                <div id="card-number" class="tappay-field"></div>
+                <div id="card-expiration-date" class="tappay-field"></div>
+                <div id="card-ccv" class="tappay-field"></div>
+                <button id="submit-order">結帳</button>
+                <div id="result"></div>
+            </div>
+        </div>
+        <div class="product-content">
+            <div class="product-image">
+                <img id="main-image" src="" alt="Product Image">
+            </div>
+            <div class="product-info">
+                <div class="top-section">
+                    <h1 id="product-title"></h1>
+                    <p id="product-id"></p>
+                    <p id="product-price"></p>
+                    <div class="product-colors">
+                        <p>顏色｜</p>
+                        <div id="color-options"></div>
+                    </div>
+                    <div class="product-sizes">
+                        <p>尺寸｜</p>
+                        <div id="size-options"></div>
+                    </div>
+                    <div class="product-quantity">
+                        <p>數量｜</p>
+                        <div class="quantity-selector">
+                            <button id="decrease">-</button>
+                            <input type="number" id="quantity" value="1" min="1" readonly>
+                            <button id="increase">+</button>
+                        </div>
+                    </div>
+                    <button id="add-to-cart" disabled>請選擇尺寸</button>
+                </div>
+                <div class="bottom-section product-information">
+                    <p id="product-texture"></p>
+                    <p id="product-wash"></p>
+                    <p id="product-place"></p>
+                </div>
+            </div>
+        </div>        
+        <div class="product-description">
+            <h2>細部說明</h2>
+            <p id="product-description"></p>
+        </div>
+        <div class="product-images" id="additional-images">
+            <!-- Additional images will be inserted here -->
+        </div>
+    </main>
+    
+    <div id="footer-placeholder"></div>
+
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.18.0"></script>
+    <script src="js/common.js"></script>
+    <script src="js/product.js"></script>
+    <script>
+        fetch('header-footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data.split('<!-- Footer -->')[0];
+                document.getElementById('footer-placeholder').innerHTML = data.split('<!-- Footer -->')[1];
+            });
+    </script>
+</body>
+</html>

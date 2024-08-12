@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>行銷活動管理</title>
+</head>
+<body>
+<h1>行銷活動管理</h1>
+<div>
+    <label for="searchInput"></label>
+    <input type="text" id="searchInput" placeholder="搜尋商品...">
+    <button id="searchButton">搜尋</button>
+</div>
+<label for="productSelect">選擇商品：</label>
+<select id="productSelect">
+    <option value="">選擇一個商品</option>
+</select>
+<form id="campaignForm">
+    <input type="hidden" id="productId" name="productId">
+    <label for="story">活動故事:</label><br>
+    <textarea id="story" name="story" rows="4" cols="50" required></textarea><br><br>
+    <label for="picture">活動圖片:</label>
+    <input type="file" id="picture" name="picture" accept="uploads/*"><br><br>
+    <img id="currentImage" src="" alt="當前圖片" style="display:none; max-width: 200px;"><br>
+    <input type="submit" value="新增活動">
+</form>
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const productSelect = document.getElementById('productSelect');
+    const productId = document.getElementById('productId');
+    const storyTextarea = document.getElementById('story');
+    const currentImage = document.getElementById('currentImage');
+    const campaignForm = document.getElementById('campaignForm');
+
+    // 頁面載入時執行
+    document.addEventListener('DOMContentLoaded', loadAllProducts);
+
+    searchButton.addEventListener('click', searchProducts);
+    productSelect.addEventListener('change', loadProductDetails);
+    campaignForm.addEventListener('submit', submitCampaign);
+
+    async function loadAllProducts() {
+        try {
+            const response = await fetch('/api/1.0/products/all-for-campaign');
+            const data = await response.json();
+            updateProductSelect(data.data);
+        } catch (error) {
+            console.error('Error:', error);
+            alert('載入所有商品時發生錯誤');
+        }
+    }
+
+    async function searchProducts() {
+        const keyword = searchInput.value.trim();
+        try {
+            const url = keyword
+                ? `/api/1.0/products/all-for-campaign?keyword=${encodeURIComponent(keyword)}`
+                : '/api/1.0/products/all-for-campaign';
+            const response = await fetch(url);
+            const data = await response.json();
+            updateProductSelect(data.data);
+        } catch (error) {
+            console.error('Error:', error);
+            alert('搜尋商品時發生錯誤');
+        }
+    }
+
+    function updateProductSelect(products) {
+        productSelect.innerHTML = '<option value="">選擇一個商品</option>';
+        products.forEach(product => {
+            const option = document.createElement('option');
+            option.value = product.id;
+            option.textContent = `${product.title} (ID: ${product.id})`;
+            productSelect.appendChild(option);
+        });
+    }
+
+    async function loadProductDetails() {
+        const selectedProductId = productSelect.value;
+        if (!selectedProductId) {
+            clearProductDetails();
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/1.0/products/details?id=${selectedProductId}`);
+            const data = await response.json();
+            const product = data.data;
+
+            productId.value = product.id;
+            storyTextarea.value = product.story || '';
+            currentImage.src = product.main_image || '';
+            currentImage.style.display = product.main_image ? 'block' : 'none';
+        } catch (error) {
+            console.error('Error:', error);
+            alert('載入商品詳情時發生錯誤');
+        }
+    }
+
+    function clearProductDetails() {
+        productId.value = '';
+        storyTextarea.value = '';
+        currentImage.src = '';
+        currentImage.style.display = 'none';
+    }
+
+    async function submitCampaign(e) {
+        e.preventDefault();
+        const formData = new FormData(campaignForm);
+
+        try {
+            const response = await fetch('/api/1.0/marketing/campaigns', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert(result.message || '活動新增成功！');
+                campaignForm.reset();
+                currentImage.style.display = 'none';
+                loadAllProducts();
+            } else {
+                const errorText = await response.text();
+                console.error('Network response was not ok:', errorText);
+                alert(`新增活動時發生錯誤: ${errorText}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(`新增活動時發生錯誤: ${error.message}`);
+        }
+    }
+</script>
+</body>
+</html>

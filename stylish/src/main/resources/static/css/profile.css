@@ -1,0 +1,41 @@
+.profile-section {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.profile-picture {
+    max-width: 150px;
+    border-radius: 50%;
+}
+
+.login-form, .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.btn-login, .btn-signup, .btn-logout {
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-login:hover, .btn-signup:hover, .btn-logout:hover {
+    background-color: #555;
+}
+
+.btn-facebook {
+    background-color: #3b5998;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-facebook:hover {
+    background-color: #2d4373;
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Upload</title>
+</head>
+<body>
+<h1>Product Upload</h1>
+<form id="productForm" th:action="@{/api/1.0/products}" method="post" enctype="multipart/form-data">
+    <label for="category">Category:</label>
+    <select id="category" name="category" required>
+        <option value="men">Men</option>
+        <option value="women">Women</option>
+        <option value="accessories">Accessories</option>
+    </select>
+    <br>
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" placeholder="超猛外套" required>
+    <br>
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" placeholder="夏熱冬冷穿比不穿還猛">
+    <br>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" placeholder="99" step="0.01" required>
+    <br>
+    <label for="texture">Texture:</label>
+    <input type="text" id="texture" name="texture" placeholder="88%聚酯纖維、12%棉" required>
+    <br>
+    <label for="wash">Wash:</label>
+    <input type="text" id="wash" name="wash" placeholder="手洗" required>
+    <br>
+    <label for="place">Place:</label>
+    <input type="text" id="place" name="place" placeholder="台灣" required>
+    <br>
+    <label for="note">Note:</label>
+    <input type="text" id="note" name="note" placeholder="實品顏色以單品為主">
+    <br>
+    <label for="story">Story:</label>
+    <textarea id="story" name="story" placeholder="2077最新超流單品"></textarea>
+    <br>
+
+    <div id="product-variants">
+        <h3>Variant</h3>
+        <button type="button" onclick="addRow()">新增變體</button>
+        <table id="variants-table">
+            <thead>
+            <tr>
+                <th>顏色名稱</th>
+                <th>顏色代碼</th>
+                <th>尺寸</th>
+                <th>庫存</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="text" name="colorName[]" placeholder="例：紅色"></td>
+                <td><input type="text" name="colorCode[]" placeholder="例：#FF0000"></td>
+                <td><input type="text" name="size[]" placeholder="例：M"></td>
+                <td><input type="number" name="stock[]" placeholder="庫存數量"></td>
+                <td><button type="button" onclick="removeRow(this)">刪除</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <label for="mainImageFile">主圖片上傳:</label>
+    <input type="file" id="mainImageFile" name="mainImageFile" accept="image/*">
+    <br>
+    <label for="otherImageFiles">其他圖片:</label>
+    <input type="file" id="otherImageFiles" name="otherImageFiles" multiple accept="image/*">
+    <div id="imageList"></div>
+    <br>
+
+    <button type="submit">Upload</button>
+</form>
+
+<script th:inline="javascript">
+    let imageFiles = [];
+
+    document.getElementById('otherImageFiles').addEventListener('change', function(event) {
+        const newFiles = Array.from(event.target.files);
+        imageFiles = imageFiles.concat(newFiles);
+        updateImageList();
+    });
+
+    function updateImageList() {
+        const imageList = document.getElementById('imageList');
+        imageList.innerHTML = '';
+        imageFiles.forEach((file, index) => {
+            const div = document.createElement('div');
+            div.className = 'imageItem';
+            div.innerHTML = `
+                ${file.name}
+                <button type="button" onclick="removeImage(${index})">移除</button>
+            `;
+            imageList.appendChild(div);
+        });
+    }
+
+    function removeImage(index) {
+        imageFiles.splice(index, 1);
+        updateImageList();
+    }
+
+    function addRow() {
+        let table = document.getElementById("variants-table").getElementsByTagName('tbody')[0];
+        let newRow = table.insertRow(table.rows.length);
+        let cell1 = newRow.insertCell(0);
+        let cell2 = newRow.insertCell(1);
+        let cell3 = newRow.insertCell(2);
+        let cell4 = newRow.insertCell(3);
+        let cell5 = newRow.insertCell(4);
+
+        cell1.innerHTML = '<input type="text" name="colorName[]" placeholder="例：紅色">';
+        cell2.innerHTML = '<input type="text" name="colorCode[]" placeholder="例：#FF0000">';
+        cell3.innerHTML = '<input type="text" name="size[]" placeholder="例：M">';
+        cell4.innerHTML = '<input type="number" name="stock[]" placeholder="庫存數量">';
+        cell5.innerHTML = '<button type="button" onclick="removeRow(this)">刪除</button>';
+    }
+
+    function removeRow(btn) {
+        let row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    document.getElementById('productForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+        let variants = [];
+        let rows = document.getElementById("variants-table").getElementsByTagName('tbody')[0].rows;
+        for (let i = 0; i < rows.length; i++) {
+            let colorName = rows[i].cells[0].getElementsByTagName('input')[0].value;
+            let colorCode = rows[i].cells[1].getElementsByTagName('input')[0].value;
+            let size = rows[i].cells[2].getElementsByTagName('input')[0].value;
+            let stock = rows[i].cells[3].getElementsByTagName('input')[0].value;
+            if (colorName && colorCode && size && stock) {
+                variants.push({colorName, colorCode, size, stock});
+            }
+        }
+        let productRequest = {
+            category: document.getElementById('category').value,
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            price: document.getElementById('price').value,
+            texture: document.getElementById('texture').value,
+            wash: document.getElementById('wash').value,
+            place: document.getElementById('place').value,
+            note: document.getElementById('note').value,
+            story: document.getElementById('story').value,
+            variants: variants
+        };
+        formData.append('productRequest', new Blob([JSON.stringify(productRequest)], { type: "application/json" }));
+
+        console.log(JSON.stringify(productRequest));
+
+        fetch('/api/1.0/products', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text || `HTTP error! status: ${response.status}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('商品新增成功, ID: ' + data.id);
+            })
+            .catch((error) => {
+                console.error('錯誤:', error);
+                alert('新增商品發生錯誤: ' + error.message);
+            });
+    });
+</script>
+</body>
+</html>
